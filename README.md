@@ -17,6 +17,7 @@ The CartPole problem is a well-known benchmark in the field of reinforcement lea
 
 - numpy
 - gym
+- random
 
 ## Usage
 
