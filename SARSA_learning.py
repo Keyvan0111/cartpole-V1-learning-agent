@@ -114,8 +114,3 @@ class SARSA_Agent():
             self.epsilon = max(self.epsilon - self.decay_epsilon, 0)
             
         self.env.close()
-
-if __name__ == "__main__":
-    agent = SARSA_Agent()
-    agent.train_model()
-    

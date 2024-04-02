@@ -147,8 +147,4 @@ class Q_agent():
             self.epsilon = max(self.epsilon - self.decay_epsilon, 0)
             
         self.env.close()
-
-if __name__ == "__main__":
-    agent = Q_agent()
-    agent.train_model()
     
