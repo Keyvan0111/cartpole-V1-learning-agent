@@ -123,6 +123,7 @@ class Q_agent():
             state = self.env.reset()[0]
             spaces = [self.pos_range, self.vel_range, self.angle_range, self.angle_vel_range]
             state_discretized = [np.digitize(state[i], spaces[i]) for i in range(len(state))]
+            print(state_discretized)
             done = False
             rewards = 0
 
