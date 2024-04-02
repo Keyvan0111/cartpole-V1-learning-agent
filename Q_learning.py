@@ -140,13 +140,19 @@ class Q_agent():
         - None
         """
         for episode in range(self.num_episodes):
-            state = self.env.reset()[0]
+            
+            # turn on rendering after the model has improved
+            if episode == 1000:
+                self.env.close()
+                self.env = gym.make('CartPole-v1', render_mode='human')
+
+            state = self.env.reset()[0] 
             spaces = [self.pos_range, self.vel_range, self.angle_range, self.angle_vel_range]
             state_discretized = [np.digitize(state[i], spaces[i]) for i in range(len(state))]
-            print(state_discretized)
             done = False
             rewards = 0
 
+            # training loop
             for _ in range(self.max_steps):
                 action = self.choose_action(state_discretized)
 
@@ -162,9 +168,10 @@ class Q_agent():
                 if done == True:
                     break
 
+            self.rewards_all_episodes.append(rewards)
             self.status_print(rewards, episode)
 
             self.epsilon = max(self.epsilon - self.decay_epsilon, 0)
-            
         self.env.close()
+
     

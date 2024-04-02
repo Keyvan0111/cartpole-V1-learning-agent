@@ -100,7 +100,6 @@ class SARSA_Agent():
         Returns:
             None
         """
-
         self.q_table[states[0], states[1], states[2], states[3], action] = self.q_table[states[0], states[1], states[2], states[3], action] + \
         self.learning_rate * (reward + self.discount_rate * self.q_table[new_states[0], new_states[1], new_states[2], new_states[3], new_action] - \
         self.q_table[states[0], states[1], states[2], states[3], action])
@@ -137,15 +136,18 @@ class SARSA_Agent():
             state = self.env.reset()[0]
             spaces = [self.pos_range, self.vel_range, self.angle_range, self.angle_vel_range]
             state_discretized = [np.digitize(state[i], spaces[i]) for i in range(len(state))]
-            initail_action = self.choose_action(state_discretized)
+            initail_action = self.choose_action(state_discretized) # set the policy
             done = False
             rewards = 0
+
+            # training loop
 
             for _ in range(self.max_steps):
 
                 new_state, reward, done, _, _ = self.env.step(initail_action)
                 new_state_discretized = [np.digitize(new_state[i], spaces[i]) for i in range(len(new_state))]
                 new_action = self.choose_action(new_state_discretized)
+                
                 self.update_Qvalue(initail_action, new_action, reward, state_discretized, new_state_discretized)               
 
                 state = new_state
