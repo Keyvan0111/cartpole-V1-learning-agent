@@ -87,8 +87,7 @@ class Q_agent():
         self.q_table[states[0], states[1], states[2], states[3], action] = \
                 self.q_table[states[0], states[1], states[2], states[3], action] + \
                 self.learning_rate * (reward + self.discount_rate * np.max(self.q_table[new_states[0], new_states[1],\
-                new_states[2], new_states[3],:]) - self.q_table[states[0],states[1],\
-                states[2], states[3], action])
+                new_states[2], new_states[3],:]) - self.q_table[states[0],states[1], states[2], states[3], action])
         return
     
     def status_print(self, rewards, episodeNumber):
