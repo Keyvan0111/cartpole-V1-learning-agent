@@ -22,7 +22,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-
 import numpy as np
 import gym
 import random
@@ -30,10 +29,10 @@ import random
 
 class Q_agent():
     def __init__(self):
+        self.env = gym.make('CartPole-v1', render_mode=None) # set rendermode to 'human' to get visuals
+
         self.num_episodes = 1000
         self.max_steps = 100
-
-        self.env = gym.make('CartPole-v1', render_mode=None) # set rendermode to 'human' to get visuals
         
         # Rules for the cartpole
         self.pos_range = np.linspace(-2.4, 2.4, 10)
@@ -42,12 +41,10 @@ class Q_agent():
         self.angle_vel_range = np.linspace(-5, 5, 10)
 
         self.rewards_all_episodes = []
-        
         self.q_table = np.zeros((len(self.pos_range)+1, len(self.vel_range)+1, len(self.angle_range)+1, len(self.angle_vel_range)+1, self.env.action_space.n))
 
         self.learning_rate = 0.1 # also known as alpha
         self.discount_rate = 0.99 # also known as Gamma
-
         self.max_epsilon = 1
         self.epsilon = self.max_epsilon
         self.min_epsilon = 0.05
@@ -145,8 +142,7 @@ class Q_agent():
                 if done == True:
                     break
 
-            self.status_print(self.rewards_all_episodes, rewards, episode)
-            # self.stats(episode)
+            self.status_print(rewards, episode)
 
             self.epsilon = max(self.epsilon - self.decay_epsilon, 0)
             
