@@ -28,6 +28,26 @@ import numpy as np
 import random
 
 class SARSA_Agent():
+    """
+    A SARSA agent for solving the CartPole-v1 problem using the State-Action-Reward-State-Action (SARSA) learning algorithm.
+
+    Attributes:
+        - env (gym.Env):  The Gym environment.
+        - num_episodes (int):  The number of episodes to train the agent.
+        - max_steps (int):  The maximum number of steps per episode.
+        - pos_range (numpy.ndarray):  The discretized range for the cart position.
+        - vel_range (numpy.ndarray):  The discretized range for the cart velocity.
+        - angle_range (numpy.ndarray):  The discretized range for the pole angle.
+        - angle_vel_range (numpy.ndarray):  The discretized range for the pole angular velocity.
+        - rewards_all_episodes (list):  A list to store rewards from all episodes.
+        - q_table (numpy.ndarray):  The Q-table for storing state-action values.
+        - learning_rate (float):  The learning rate (alpha).
+        - discount_rate (float):  The discount rate (gamma).
+        - max_epsilon (float):  The maximum epsilon for epsilon-greedy action selection.
+        - epsilon (float):  The current epsilon value for epsilon-greedy action selection.
+        - min_epsilon (float):  The minimum epsilon value for epsilon decay.
+        - decay_epsilon (float):  The decay rate for epsilon.
+    """
     def __init__(self):
         self.env = gym.make('CartPole-v1', render_mode=None) # set rendermode to 'human' to get visuals
 
@@ -51,6 +71,15 @@ class SARSA_Agent():
         self.decay_epsilon = 0.001
 
     def choose_action(self, states):
+        """
+        Chooses an action based on the current state using an epsilon-greedy policy.
+
+        Parameters:
+            states (list): The discretized representation of the current state.
+
+        Returns:
+            int: The action selected.
+        """
         if np.random.uniform(0,1) > self.epsilon:
             action = np.argmax(self.q_table[states[0], states[1], states[2], states[3], :])
         else:
@@ -58,6 +87,19 @@ class SARSA_Agent():
         return action
     
     def update_Qvalue(self, action, new_action, reward, states, new_states):
+        """
+        Updates the Q-value for a given state-action pair using the SARSA update formula.
+
+        Parameters:
+            action (int): The current action taken.
+            new_action (int): The next action selected according to the policy.
+            reward (float): The reward received after taking the action.
+            states (list): The discretized representation of the current state.
+            new_states (list): The discretized representation of the next state.
+
+        Returns:
+            None
+        """
 
         self.q_table[states[0], states[1], states[2], states[3], action] = self.q_table[states[0], states[1], states[2], states[3], action] + \
         self.learning_rate * (reward + self.discount_rate * self.q_table[new_states[0], new_states[1], new_states[2], new_states[3], new_action] - \
@@ -66,15 +108,15 @@ class SARSA_Agent():
 
     def status_print(self, rewards, episodeNumber):
         """
-        Prints the status of the training process including the episode number,
-        current epsilon value, and the mean reward of the last 100 episodes.
+        Prints the training status, including the current episode number, epsilon value,
+        and the mean reward of the last 100 episodes.
 
         Parameters:
-        - rewards: The total rewards obtained in the current episode.
-        - episodeNumber: The current episode number.
+            rewards (float): The total rewards obtained in the current episode.
+            episodeNumber (int): The current episode number.
 
         Returns:
-        - None
+            None
         """
         self.rewards_all_episodes.append(rewards)
         mean_rewards = np.mean(self.rewards_all_episodes[-100:])
@@ -82,8 +124,15 @@ class SARSA_Agent():
             print(f'Episode: {episodeNumber}  Epsilon: {self.epsilon:0.2f}  Mean Rewards {mean_rewards:0.1f}')
     
     def train_model(self):
+        """
+        Trains the SARSA agent over a specified number of episodes.
 
+        During training, the agent selects actions based on the current policy,
+        updates the Q-values using the SARSA formula, and gradually decays epsilon.
 
+        Returns:
+            None
+        """
         for episode in range(self.num_episodes):
             state = self.env.reset()[0]
             spaces = [self.pos_range, self.vel_range, self.angle_range, self.angle_vel_range]

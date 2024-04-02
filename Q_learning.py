@@ -28,6 +28,26 @@ import random
 
 
 class Q_agent():
+    """
+    A Q agent for solving the CartPole-v1 problem using the Q-learning algorithm.
+
+    Attributes:
+        - env (gym.Env):  The Gym environment.
+        - num_episodes (int):  The number of episodes to train the agent.
+        - max_steps (int):  The maximum number of steps per episode.
+        - pos_range (numpy.ndarray):  The discretized range for the cart position.
+        - vel_range (numpy.ndarray):  The discretized range for the cart velocity.
+        - angle_range (numpy.ndarray):  The discretized range for the pole angle.
+        - angle_vel_range (numpy.ndarray):  The discretized range for the pole angular velocity.
+        - rewards_all_episodes (list):  A list to store rewards from all episodes.
+        - q_table (numpy.ndarray):  The Q-table for storing state-action values.
+        - learning_rate (float):  The learning rate (alpha).
+        - discount_rate (float):  The discount rate (gamma).
+        - max_epsilon (float):  The maximum epsilon for epsilon-greedy action selection.
+        - epsilon (float):  The current epsilon value for epsilon-greedy action selection.
+        - min_epsilon (float):  The minimum epsilon value for epsilon decay.
+        - decay_epsilon (float):  The decay rate for epsilon.
+    """
     def __init__(self):
         self.env = gym.make('CartPole-v1', render_mode=None) # set rendermode to 'human' to get visuals
 
