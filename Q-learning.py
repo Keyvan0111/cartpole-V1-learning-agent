@@ -50,7 +50,7 @@ class Q_agent():
         self.min_epsilon = 0.05
         self.decay_epsilon = 0.001
     
-    def choose_action(self, state_discretized):
+    def choose_action(self, states):
         """
         Selects an action based on the current state using the epsilon-greedy policy.
 
@@ -59,36 +59,36 @@ class Q_agent():
         generated number and the epsilon value.
 
         Parameters:
-        - state_discretized: A list of indices representing the discretized state.
+        - states: A list of indices representing the discretized state.
 
         Returns:
         - action: The selected action as an integer.
         """
         exploration_rate_threshold = random.uniform(0,1)
         if exploration_rate_threshold > self.epsilon:
-            action = np.argmax(self.q_table[state_discretized[0], state_discretized[1], state_discretized[2], state_discretized[3]])
+            action = np.argmax(self.q_table[states[0], states[1], states[2], states[3]])
         else:
             action = self.env.action_space.sample()
         return action
     
-    def update_Qvalue(self, action, reward, state_discretized, new_state_discretized):
+    def update_Qvalue(self, action, reward, states, new_states):
         """
         Updates the Q-value for a given state and action pair using the Q-learning formula.
 
         Parameters:
         - action: The action taken from the given state.
         - reward: The reward received after taking the action.
-        - state_discretized: The discretized representation of the current state.
-        - new_state_discretized: The discretized representation of the new state after taking the action.
+        - states: The discretized representation of the current state.
+        - new_states: The discretized representation of the new state after taking the action.
 
         Returns:
         - None
         """
-        self.q_table[state_discretized[0], state_discretized[1], state_discretized[2], state_discretized[3], action] = \
-                self.q_table[state_discretized[0], state_discretized[1], state_discretized[2], state_discretized[3], action] + \
-                self.learning_rate * (reward + self.discount_rate * np.max(self.q_table[new_state_discretized[0], new_state_discretized[1],\
-                new_state_discretized[2], new_state_discretized[3],:]) - self.q_table[state_discretized[0],state_discretized[1],\
-                state_discretized[2], state_discretized[3], action])
+        self.q_table[states[0], states[1], states[2], states[3], action] = \
+                self.q_table[states[0], states[1], states[2], states[3], action] + \
+                self.learning_rate * (reward + self.discount_rate * np.max(self.q_table[new_states[0], new_states[1],\
+                new_states[2], new_states[3],:]) - self.q_table[states[0],states[1],\
+                states[2], states[3], action])
         return
     
     def status_print(self, rewards, episodeNumber):
